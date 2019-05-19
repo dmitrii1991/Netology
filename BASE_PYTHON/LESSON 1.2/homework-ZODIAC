@@ -1,0 +1,29 @@
+month = str(input('Введите месяц (строчными символами)'))
+data = int(input('Введите Дату'))
+
+if (month == "декабрь" and ((data >= 22) and (data <= 31))) or (month == "январь" and ((data >= 1) and (data <= 19))):
+    print('Козерог')
+elif (month == "февраль" and ((data >= 1) and (data <= 19))) or (month == "январь" and ((data >= 20) and (data <= 31))):
+    print('Водолей')
+elif (month == "февраль" and ((data >= 20) and (data <= 31))) or (month == "март" and ((data >= 1) and (data <= 21))):
+    print('Рыбы')
+elif (month == "апрель" and ((data >= 1) and (data <= 21))) or (month == "март" and ((data >= 22) and (data <= 31))):
+    print('Овен')
+elif (month == "апрель" and ((data >= 22) and (data <= 31))) or (month == "май" and ((data >= 1) and (data <= 21))):
+    print('Телец')
+elif (month == "июнь" and ((data >= 1) and (data <= 21))) or (month == "май" and ((data >= 22) and (data <= 31))):
+    print('Близнецы')
+elif (month == "июнь" and ((data >= 22) and (data <= 31))) or (month == "июль" and ((data >= 1) and (data <= 21))):
+    print('Рак')
+elif (month == "август" and ((data >= 1) and (data <= 21))) or (month == "июль" and ((data >= 22) and (data <= 31))):
+    print('Лев')
+elif (month == "август" and ((data >= 22) and (data <= 31))) or (month == "сентябрь" and ((data >= 1) and (data <= 21))):
+    print('Дева')
+elif (month == "октябрь" and ((data >= 1) and (data <= 21))) or (month == "сентябрь" and ((data >= 22) and (data <= 31))):
+    print('Весы')
+elif (month == "октябрь" and ((data >= 22) and (data <= 31))) or (month == "ноябрь" and ((data >= 1) and (data <= 20))):
+    print('Скорпион')
+elif (month == "декабрь" and ((data >= 1) and (data <= 21))) or (month == "ноябрь" and ((data >= 21) and (data <= 31))):
+    print('стрелец')
+else:
+    print('Вы рождены под 13-ым знаком зодиака!')
