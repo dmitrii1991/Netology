@@ -1,0 +1,19 @@
+import csv
+flats_list = list()
+
+with open('output.csv', 'r', encoding='utf-8', newline='') as csvfile:
+    flats_csv = csv.reader(csvfile, delimiter=';')
+    flats_list = list(flats_csv)
+
+flat_info = {}
+flats_list_header = flats_list.pop(0)
+i = 0
+
+for flat in flats_list:
+  i += 1
+  if flat[2] == "новостройка":
+    flat_info[flat[0]] = {"№"+str(i), flat[1], flat[2], flat[11]}
+
+#info = str(input('input id '))
+#print(flat_info[info])
+print(flat_info)
