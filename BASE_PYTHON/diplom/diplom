@@ -3,7 +3,7 @@ import requests
 import time
 import json
 
-TOKEN = "2d6291d219c98733a3193a20867ed1c945aa679f70561c6b9732c03daa6847ae27051659e16c20bd55c59"
+TOKEN = "95b10ab99a379b66e9fca6313044227ab8a1a83a91acf48a36e569de25f4224d4b16675ec139cafd13bd5"
 ID = "171691064"
 NAME = "eshmargunov"
 
@@ -86,7 +86,7 @@ def spy_game(my_list_group, dict_friends_group):
         data_group = response.json() # get count groups
         outdata['members_count'] = data_group['response']['count']
         print(outdata,'------------------')
-        outdata_all.append(outdata)
+        outdata_all.append(str(outdata))
     print('geting info about groups')
     pprint(outdata_all)
     print('start data output in json')
