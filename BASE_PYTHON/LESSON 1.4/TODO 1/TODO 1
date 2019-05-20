@@ -1,0 +1,16 @@
+import csv
+flats_list = list()
+
+with open('output.csv', 'r', encoding='utf-8', newline='') as csvfile:
+    flats_csv = csv.reader(csvfile, delimiter=';')
+    flats_list = list(flats_csv)
+#TODO 1:
+Header_list = flats_list.pop(0)
+i = 0
+new_houses =0
+for flat in flats_list:
+  i += 1
+  if "новостройка" in flat:
+    print('Порядковый номер; ', i, " {}\n".format(flat))
+    new_houses +=1
+print("Общее количесво новостроек", new_houses)
