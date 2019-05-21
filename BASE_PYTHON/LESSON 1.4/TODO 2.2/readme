@@ -9,3 +9,6 @@ for flat in flats_list:
     subway_dict[subway] = list()
   subway_dict[subway].append(flat[0])
 print(subway_dict)
+
+
+# 3) Самостоятельно напишите код, который подсчитывает и выводит, сколько квартир нашлось у каждого метро.
