@@ -1,0 +1,36 @@
+import csv
+from pprint import pprint
+
+flats_list = list()
+
+with open('output.csv', 'r', encoding='utf-8', newline='') as csvfile:
+    flats_csv = csv.reader(csvfile, delimiter=';')
+    flats_list = list(flats_csv)
+
+subway_dict = {}
+flat_info = {}
+i = 0
+
+flats_list_header = flats_list.pop(0)
+
+for flat in flats_list:
+    subway = flat[3].replace("м.", "")
+    if subway not in subway_dict.keys():
+        subway_dict[subway] = list()
+print("Список доступного метро:")
+pprint(subway_dict.keys())
+
+info = str(input('ВВедите интересуещее метро объекта из верхнего списка:\n'))
+
+for flats in flats_list:
+    val = list(flats[14])
+    if info == flats[3].replace("м.", ""):
+        if flats[14] in flat_info.keys():
+            val = list(flat_info[flats[14]])
+            val.append([str(flats[0]), str(flats[1]), str(flats[2]), str(flats[11])])
+            flat_info[flats[14]] = val
+        else:
+            flat_info[flats[14]] = {flats[0], flats[1], flats[2], flats[11]}
+        i += 1
+print("количество квартир", i)
+print(flat_info)
