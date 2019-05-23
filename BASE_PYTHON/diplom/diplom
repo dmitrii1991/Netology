@@ -3,9 +3,10 @@ import requests
 import time
 import json
 
-TOKEN = "95b10ab99a379b66e9fca6313044227ab8a1a83a91acf48a36e569de25f4224d4b16675ec139cafd13bd5"
+TOKEN = "25cdc9a047c63ca64a5dd4e237c7435719a819bbbb372e8599c0c4b2cf0ab1f958ce81c2debf37d9d6131"
 ID = "171691064"
 NAME = "eshmargunov"
+
 
 class Groups:
 
@@ -22,6 +23,8 @@ class Groups:
         return 'https://vk.com/id' + self.user_id
 
     def mygroup(self): # output all groups
+        global  start
+        start = time.time()
         response = requests.get('https://api.vk.com/method/groups.get', self.params)  # status code
         data_mygroup = response.json()  # get dict id groups
         mygroup_set = set()
@@ -85,7 +88,6 @@ def spy_game(my_list_group, dict_friends_group):
         response = requests.get('https://api.vk.com/method/groups.getMembers', params) # status code
         data_group = response.json() # get count groups
         outdata['members_count'] = data_group['response']['count']
-        print(outdata,'------------------')
         outdata_all.append(str(outdata))
     print('geting info about groups')
     pprint(outdata_all)
@@ -93,6 +95,9 @@ def spy_game(my_list_group, dict_friends_group):
     with open('diplom.json', 'w', encoding='utf-8') as f:
         json.dump(outdata_all, f)
     print('done!')
+    global end
+    end = time.time()
+    print('Total time: {} sec.'.format(end - start))
     return outdata_all
 
 
