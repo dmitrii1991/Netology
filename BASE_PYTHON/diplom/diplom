@@ -3,10 +3,18 @@ import requests
 import time
 import json
 
-TOKEN = "25cdc9a047c63ca64a5dd4e237c7435719a819bbbb372e8599c0c4b2cf0ab1f958ce81c2debf37d9d6131"
+TOKEN = "d3c0f1924c15827420b1c5b32104a799a66da408fbe5abb363e2ffb89faa80f31301879e685cbeb00a239"
 ID = "171691064"
 NAME = "eshmargunov"
 
+def benchmark(func):
+    def times(*args, **kw):
+        start = time.time()
+        rezult = func(*args, **kw)
+        end = time.time()
+        print(' It takes {} sec.'.format(end - start))
+        return rezult
+    return times
 
 class Groups:
 
@@ -23,8 +31,6 @@ class Groups:
         return 'https://vk.com/id' + self.user_id
 
     def mygroup(self): # output all groups
-        global  start
-        start = time.time()
         response = requests.get('https://api.vk.com/method/groups.get', self.params)  # status code
         data_mygroup = response.json()  # get dict id groups
         mygroup_set = set()
@@ -32,6 +38,7 @@ class Groups:
         print(len(mygroup_set), " groups in the studied profile")
         return mygroup_set # get list id groups
 
+    @benchmark
     def myfriends_groups(self): # all groups of friends
         response = requests.get('https://api.vk.com/method/friends.get', self.params)  # status code
         myfriends = response.json()  # get dict friends
@@ -61,6 +68,8 @@ class Groups:
                 print(i, "/", len(myfriends_list), 'find: ', len(data_friendsgroup['response']['items']), 'group(s)')
         return myfriends_and_groups# get list id groups
 
+
+@benchmark
 def spy_game(my_list_group, dict_friends_group):
     rezult = my_list_group #
     outdata = {} # dict characteristic_group
@@ -95,14 +104,7 @@ def spy_game(my_list_group, dict_friends_group):
     with open('diplom.json', 'w', encoding='utf-8') as f:
         json.dump(outdata_all, f)
     print('done!')
-    global end
-    end = time.time()
-    print('Total time: {} sec.'.format(end - start))
     return outdata_all
-
-
-
-
 
 if __name__ == "__main__":
     spy_game(Groups(ID).mygroup(), Groups(ID).myfriends_groups())
