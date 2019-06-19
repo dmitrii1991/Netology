@@ -1,0 +1,14 @@
+body {
+  font-family: arial, sans-serif;
+  font-size: 16px;
+  width: 600px;
+}
+
+h1 {
+  font-size: 28px;
+}
+
+a {
+  color: #349bdf;
+  text-decoration: none;
+}
