@@ -17,7 +17,7 @@ def read_data(csv_file, db):
                 'Исполнитель': line['Исполнитель'],
                 'Цена': int(line["Цена"]),
                 'Место': line["Место"],
-                'Дата': datetime.strptime(line["Дата"] + '.2019', '%d.%m.%Y')
+                'Дата': datetime.strptime(line["Дата"] + '.2019', '%d.%m.%Y'),
             }
             tikets_list.append(tikets_dict)
         db.insert_many(tikets_list)
@@ -30,7 +30,7 @@ def find_cheapest(db):
     """
     cheapest= db.aggregate(
         [
-            {'$sort': {'Цена': 1}}
+            {'$sort': {'Цена': 1}},
         ]
     )
     return list(cheapest)
