@@ -2,7 +2,7 @@ from User import user
 from db import db
 import json
 
-ACCESS_TOKEN = "a6d5ce80e06760aaabf007e3b60ebb08f67b4b8b3953327652b12fe4b20a30f3db3f8cd10f388fa1c0471"
+ACCESS_TOKEN = ""
 
 def find_love(token, id):
     user1 = user.Id_user(token, id)

@@ -10,7 +10,7 @@ from pprint import pprint
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 from ErrorsVK import ErrorsVK
 
-ACCESS_TOKEN = "a6d5ce80e06760aaabf007e3b60ebb08f67b4b8b3953327652b12fe4b20a30f3db3f8cd10f388fa1c0471"
+ACCESS_TOKEN = ""
 ERRORSVK = ErrorsVK.errors_from_vk
 
 class Id_user:
