@@ -1,8 +1,26 @@
 from User import user
+from db import db
+import json
 
-ACCESS_TOKEN = ""
+ACCESS_TOKEN = "a6d5ce80e06760aaabf007e3b60ebb08f67b4b8b3953327652b12fe4b20a30f3db3f8cd10f388fa1c0471"
 
-andr = user.Id_user(ACCESS_TOKEN, "304436454")
-andr.search()
-andr.change_weight()
+def find_love(token, id):
+    user1 = user.Id_user(token, id)
+    try:
+        user1.search()
+        result = user1.find_foto()
+        return result
+    except KeyError:
+        return None
 
+users = find_love(ACCESS_TOKEN, "304436454")
+if users:
+    # create_db("vkinder_db", "postgres", "1234")
+    # add_users(users, "vkinder_db", "postgres", "1234")
+    data_json = []
+    for user in users:
+        data_json.append({'points': user[0], 'id': user[1], 'foto': user[2]})
+    with open('data.json', 'w') as f:
+        json.dump(data_json, f)
+else:
+    print('Ошибка')

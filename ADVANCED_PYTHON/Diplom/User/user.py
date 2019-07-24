@@ -10,7 +10,7 @@ from pprint import pprint
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 from ErrorsVK import ErrorsVK
 
-ACCESS_TOKEN = ""
+ACCESS_TOKEN = "a6d5ce80e06760aaabf007e3b60ebb08f67b4b8b3953327652b12fe4b20a30f3db3f8cd10f388fa1c0471"
 ERRORSVK = ErrorsVK.errors_from_vk
 
 class Id_user:
@@ -45,8 +45,8 @@ class Id_user:
             response = requests.get('https://api.vk.com/method/users.get', self.params)
             data_user = response.json()
 
-            if not data_user.setdefault('error', False):
-                if not data_user['response'][0].get('deactivated') == 'deleted':
+            if not data_user.get('error'):
+                if not data_user['response'][0].get('deactivated') == 'deleted' and not data_user['response'][0].get('is_closed') == True:
                     self.user_info['Имя'] = data_user['response'][0].setdefault('first_name', 'скрыто')
                     self.user_info['Фамилия'] = data_user['response'][0].setdefault('last_name', 'скрыто')
 
@@ -93,20 +93,31 @@ class Id_user:
 
                     self.books = data_user['response'][0].setdefault('books', '')
                     self.user_info['Любымие книги'] = self.books
+                    pprint(self.user_info)
                 else:
-                    print('пользователь удален')
-
-        except KeyError as er:
+                    print('''
+Невозможно собрать информацию пользователя
+пользователь удален/ или у пользователя закрытый профиль
+                    ''')
+                    return None
+            else:
+                error = data_user['error']['error_code']
+                print('Код ошибки: ', error, '\n Описание ошибки: ', ERRORSVK.setdefault(error, 'неизвестная ошибка'))
+                return None
+        except KeyError:
             error = data_user['error']['error_code']
             print('Код ошибки: ', error, '\n Описание ошибки: ', ERRORSVK.setdefault(error, 'неизвестная ошибка'))
-
+            return None
         # print(data_user, '\n')
-        pprint(self.user_info)
+
 
     def search(self):
         del self.params['user_id']
         # choice_age = input(f'Ваш возраст: {self.age}')
-        self.params['age_from'] = int(self.age) - 5
+        if int(self.age) <= 21:
+            self.params['age_from'] = 16
+        else:
+            self.params['age_from'] = int(self.age) - 5
         self.params['age_to'] = int(self.age) + 5
 
         self.params['has_photo'] = 1
@@ -123,7 +134,8 @@ class Id_user:
             'country_id': 1,
             'need_all': 0,
         }
-        city_from_user = input(f'Ваш город: {self.city["title"]} введите 1 для поиска в этом городе, или название другого города (не более 15 симв) \n')
+        city_from_user = input(f'Ваш город: {self.user_info["Контактная информация"]} введите 1 для поиска в этом '
+                               f'городе, или название другого города (не более 15 симв) \n')
         if city_from_user == '1':
             self.params_city['q'] = self.user_info['Контактная информация'][0:14]
         else:
@@ -184,13 +196,9 @@ class Id_user:
             else:
                 self.candidates.append([point, love['id']])
                 heapq.heappop(self.candidates)
-        print(self.candidates)
-        # while self.candidates:
-        #     next_item = heapq.heappop(self.candidates)
-        #     print(next_item)
-        # return self.candidates
+        # print(self.candidates)  # Для самопроверки
 
-    def change_weight(self):
+    def find_foto(self):
         result = []
         for candidate in self.candidates:
             self.params_photo = {
@@ -202,43 +210,47 @@ class Id_user:
                 'extended': 1
             }
             response = requests.get('https://api.vk.com/method/photos.get', self.params_photo)
-            time.sleep(0.15)
+            time.sleep(0.4)
             data_foto_user = response.json()
             dict_photos = []
-            for photo in data_foto_user['response']['items']:
-                finded_photos = dict()
-                likes = photo['likes']['count']
-                finded_photos = {
-                    'likes': likes,
-                    'url': ''
-                }
+            # print(data_foto_user)
+            if data_foto_user.get('error'):
+                result.append([candidate[0], candidate[1], 'Профиль приватный'])
+            else:
+                for photo in data_foto_user['response']['items']:
+                    finded_photos = dict()
+                    likes = photo['likes']['count']
+                    finded_photos = {
+                        'likes': likes,
+                        'url': ''
+                    }
 
-                for size in photo['sizes']:
-                    if size['type'] == 's' and not finded_photos['url']:
-                        finded_photos['url'] = size['url']
-                    elif size['type'] == 'r':
-                        finded_photos['url'] = size['url']
-                dict_photos.append(finded_photos)
-            sorted_dict_photos = sorted(dict_photos, key=lambda k: k['likes'])
-            urls = []
-            for link in sorted_dict_photos[-3:]:
-                urls.append(link['url'])
-            result.append([candidate[0], candidate[1], urls])
-        result.sort(reverse=True)
-        pprint(result)
-        return urls
+                    for size in photo['sizes']:
+                        if size['type'] == 's' and not finded_photos['url']:
+                            finded_photos['url'] = size['url']
+                        elif size['type'] == 'r':
+                            finded_photos['url'] = size['url']
+                    dict_photos.append(finded_photos)
+                sorted_dict_photos = sorted(dict_photos, key=lambda k: k['likes'])
+                urls = []
+                for link in sorted_dict_photos[-3:]:
+                    urls.append(link['url'])
 
-
+                result.append([candidate[0], candidate[1], urls])
+            result.sort(reverse=True)
+        print(result)
+        return result
 
     def __str__(self):
         return 'https://vk.com/id' + str(self.params['user_id'])
 
 
+
 if __name__ == "__main__":
     try:
-        polina = Id_user(ACCESS_TOKEN, "304436454")
+        polina = Id_user(ACCESS_TOKEN, "2324405")
         polina.search()
-        polina.change_weight()
+        polina.find_foto()
 
     except NameError as name:
         print(f"{name}| enter string!")
