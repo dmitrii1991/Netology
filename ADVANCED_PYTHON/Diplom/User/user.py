@@ -35,6 +35,13 @@ class Id_user:
                 data_user = response.json()
                 self.params['user_id'] = data_user['response'][0]['id']
                 del self.params['user_ids']
+        except KeyError:
+            error = data_user['error']['error_code']
+            print('Код ошибки: ', error, '\n Описание ошибки: ', ERRORSVK.setdefault(error, 'неизвестная ошибка'))
+            return None
+
+    def get_info(self):
+        try:
             # получение информации возраста, пола, интересов
             self.params['fields'] = 'bdate, city, sex, interests, books, music, games, relation, movies'
             response = requests.get('https://api.vk.com/method/users.get', self.params)
@@ -96,6 +103,7 @@ class Id_user:
             return None
 
     def search(self):
+        self.get_info()
         del self.params['user_id']
         if int(self.age) <= 21:
             self.params['age_from'] = 16
