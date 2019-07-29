@@ -6,16 +6,13 @@ import os
 import re
 import heapq
 from pprint import pprint
-
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 from ErrorsVK import ErrorsVK
 
-ACCESS_TOKEN = ""
+ACCESS_TOKEN = ''
 ERRORSVK = ErrorsVK.errors_from_vk
 
 class Id_user:
-
-
     def __init__(self, token: str, name: str):
         self.user_info = {}
         self.token = token
@@ -26,7 +23,6 @@ class Id_user:
             'v': '5.92',
             'fields': self.fields
         }
-
         # проверка на данные ID/ check for ID data
         try:
             if self.name.isdigit():
@@ -39,17 +35,14 @@ class Id_user:
                 data_user = response.json()
                 self.params['user_id'] = data_user['response'][0]['id']
                 del self.params['user_ids']
-
             # получение информации возраста, пола, интересов
             self.params['fields'] = 'bdate, city, sex, interests, books, music, games, relation, movies'
             response = requests.get('https://api.vk.com/method/users.get', self.params)
             data_user = response.json()
-
             if not data_user.get('error'):
                 if not data_user['response'][0].get('deactivated') == 'deleted' and not data_user['response'][0].get('is_closed') == True:
                     self.user_info['Имя'] = data_user['response'][0].setdefault('first_name', 'скрыто')
                     self.user_info['Фамилия'] = data_user['response'][0].setdefault('last_name', 'скрыто')
-
                     self.birth = data_user['response'][0].setdefault('bdate', 'скрыто')
                     if self.birth == 'скрыто' or len(self.birth.split('.')) != 3:
                         while True:
@@ -63,23 +56,18 @@ class Id_user:
                         self.age = (datetime.date.today() - d).days // 365
                     self.user_info['День рождения'] = self.birth
                     self.user_info['Возраст'] = int(self.age)
-
                     self.city = data_user['response'][0].setdefault('city', '')
                     if self.city:
                         self.user_info['Контактная информация'] = self.city['title']
                     else:
                         self.user_info['Контактная информация'] = input(
                             'Контактная информация (Наименование населенного пункта\n')
-
                     self.games = data_user['response'][0].setdefault('games', '')
                     self.user_info['Любимые игры'] = self.games
-
                     self.movies = data_user['response'][0].setdefault('movies', '')
                     self.user_info['Любимые фильмы'] = self.movies
-
                     self.music = data_user['response'][0].setdefault('music', '')
                     self.user_info['Любимая музыка'] = self.music
-
                     self.sex = data_user['response'][0].setdefault('sex', 'скрыто')
                     if self.sex == 1:
                         self.user_info['Пол'] = 'Женский'
@@ -87,13 +75,11 @@ class Id_user:
                         self.user_info['Пол'] = 'Мужской'
                     else:
                         self.user_info['Пол'] = input('Выберите пол (Мужской\Женский): \n')
-
                     self.interests = data_user['response'][0].setdefault('interests', '')
                     self.user_info['Интересы'] = self.interests
-
                     self.books = data_user['response'][0].setdefault('books', '')
                     self.user_info['Любымие книги'] = self.books
-                    pprint(self.user_info)
+                    # pprint(self.user_info)
                 else:
                     print('''
 Невозможно собрать информацию пользователя
@@ -108,18 +94,14 @@ class Id_user:
             error = data_user['error']['error_code']
             print('Код ошибки: ', error, '\n Описание ошибки: ', ERRORSVK.setdefault(error, 'неизвестная ошибка'))
             return None
-        # print(data_user, '\n')
-
 
     def search(self):
         del self.params['user_id']
-        # choice_age = input(f'Ваш возраст: {self.age}')
         if int(self.age) <= 21:
             self.params['age_from'] = 16
         else:
             self.params['age_from'] = int(self.age) - 5
         self.params['age_to'] = int(self.age) + 5
-
         self.params['has_photo'] = 1
         self.params['count'] = 1000
         if self.user_info['Пол'] == 'Женский':
@@ -143,12 +125,8 @@ class Id_user:
         response_city = requests.get('https://api.vk.com/method/database.getCities', self.params_city)
         data_city = response_city.json()
         self.params['city'] = data_city['response']['items'][0]['id']
-
         response = requests.get('https://api.vk.com/method/users.search', self.params)
         data_people = response.json()
-        # numbers_for_search = int(input(f'Всего нашлось подходящих кандидатов/кандидаток: '
-        #                                f'{data_people["response"]["count"]} сколько людей проанализировать\n'))
-
         weight = {
             'interests': 5,
             'book': 3,
@@ -156,47 +134,39 @@ class Id_user:
             'games': 1,
             'movies': 2,
         }
-
         self.candidates = []
         for love in data_people['response']['items']:
             point = 0
-
             music_weight = re.split(", ", love.setdefault('music', ''))
             if music_weight != '' and self.music != '':
                 general_music = set(music_weight).intersection(set(re.split(", ", self.music)))
-                if general_music != None:
+                if general_music is not None:
                     point += weight['music'] * len(general_music)
-
             book_weight = re.split(", ", love.setdefault('books', ''))
             if book_weight != '' and self.books != '':
                 general_book = set(book_weight).intersection(set(re.split(", ", self.books)))
                 if general_book != None:
                     point += weight['music'] * len(general_book)
-
             games_weight = re.split(", ", love.setdefault('games', ''))
             if games_weight != '' and self.games != '':
                 general_game = set(games_weight).intersection(set(re.split(", ", self.games)))
                 if general_game != None:
                     point += weight['games'] * len(general_game)
-
             movies_weight = re.split(", ", love.setdefault('movies', ''))
             if movies_weight != '' and self.movies != '':
                 general_movie = set(movies_weight).intersection(set(re.split(", ", self.movies)))
                 if general_movie != None:
                     point += weight['movies'] * len(general_movie)
-
             interests_weight = re.split(", ", love.setdefault('interests', ''))
             if interests_weight != '' and self.interests != '':
                 general_interests = set(interests_weight).intersection(set(re.split(", ", self.interests)))
                 if general_interests != None:
                     point += weight['interests'] * len(general_interests)
-
             if len(self.candidates) < 12:
                 self.candidates.append([point, love['id']])
             else:
                 self.candidates.append([point, love['id']])
                 heapq.heappop(self.candidates)
-        # print(self.candidates)  # Для самопроверки
 
     def find_foto(self):
         result = []
@@ -213,7 +183,6 @@ class Id_user:
             time.sleep(0.4)
             data_foto_user = response.json()
             dict_photos = []
-            # print(data_foto_user)
             if data_foto_user.get('error'):
                 result.append([candidate[0], candidate[1], 'Профиль приватный'])
             else:
@@ -224,7 +193,6 @@ class Id_user:
                         'likes': likes,
                         'url': ''
                     }
-
                     for size in photo['sizes']:
                         if size['type'] == 's' and not finded_photos['url']:
                             finded_photos['url'] = size['url']
@@ -235,7 +203,6 @@ class Id_user:
                 urls = []
                 for link in sorted_dict_photos[-3:]:
                     urls.append(link['url'])
-
                 result.append([candidate[0], candidate[1], urls])
             result.sort(reverse=True)
         print(result)
@@ -244,13 +211,12 @@ class Id_user:
     def __str__(self):
         return 'https://vk.com/id' + str(self.params['user_id'])
 
-
-
 if __name__ == "__main__":
     try:
         polina = Id_user(ACCESS_TOKEN, "2324405")
-        polina.search()
-        polina.find_foto()
+        print(polina)
+        # polina.search()
+        # polina.find_foto()
 
     except NameError as name:
         print(f"{name}| enter string!")
