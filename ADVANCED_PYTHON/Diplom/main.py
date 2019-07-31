@@ -11,8 +11,8 @@ def find_love(token, id):
         user1.search()
         users = user1.find_foto()
         if users:
-            create_db("vkinder_db", "postgres", "1234")
-            add_users(users, "vkinder_db", "postgres", "1234")
+            db.create_db("vkinder_db", "postgres", "1234")
+            db.add_users(users, "vkinder_db", "postgres", "1234")
             data_json = []
             for u in users:
                 data_json.append({'points': u[0], 'id': u[1], 'foto': u[2]})

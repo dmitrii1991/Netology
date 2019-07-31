@@ -9,7 +9,7 @@ from pprint import pprint
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 from ErrorsVK import ErrorsVK
 
-ACCESS_TOKEN = ''
+ACCESS_TOKEN = ""
 ERRORSVK = ErrorsVK.errors_from_vk
 
 class Id_user:
@@ -170,7 +170,7 @@ class Id_user:
                 general_interests = set(interests_weight).intersection(set(re.split(", ", self.interests)))
                 if general_interests != None:
                     point += weight['interests'] * len(general_interests)
-            if len(self.candidates) < 12:
+            if len(self.candidates) < 30:
                 self.candidates.append([point, love['id']])
             else:
                 self.candidates.append([point, love['id']])
@@ -183,7 +183,7 @@ class Id_user:
                 'access_token': self.token,
                 'v': '5.95',
                 'owner_id': candidate[1],
-                'count': 1000,
+                'count ': 1000,
                 "album_id": 'profile',
                 'extended': 1
             }
@@ -191,9 +191,7 @@ class Id_user:
             time.sleep(0.4)
             data_foto_user = response.json()
             dict_photos = []
-            if data_foto_user.get('error'):
-                result.append([candidate[0], candidate[1], 'Профиль приватный'])
-            else:
+            if not data_foto_user.get('error'):
                 for photo in data_foto_user['response']['items']:
                     finded_photos = dict()
                     likes = photo['likes']['count']
@@ -223,6 +221,8 @@ if __name__ == "__main__":
     try:
         polina = Id_user(ACCESS_TOKEN, "2324405")
         print(polina)
+        polina.search()
+        polina.find_foto()
         # polina.search()
         # polina.find_foto()
 
