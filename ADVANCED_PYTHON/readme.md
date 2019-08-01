@@ -6,11 +6,10 @@
 * LESSON 1.3 «Decorators»
 * LESSON 1.4 «Function 2.0 args, kwargs»
 * LESSON 1.5 «Zen of Python - что должен знать каждый разработчик / PEP8 и PEP»
-* LESSON 2.2 «Классы и их применение в Python»
-* LESSON 2.3 «Исключения»
-* LESSON 2.4 «Открытие и чтение файла, запись в файл»
-* LESSON 2.5 «Менеджер контекста»
-* LESSON 3.1  «Работа с разными форматами данных»
-* LESSON 3.2 «Работа с библиотекой requests, http-запросы»
-* LESSON 3.3 «Работа с классами на примере API VK»
+* LESSON 2.1  «Tests»
+* LESSON 2.2 «Regular expressions»
+* LESSON 2.3 «Database. PostgreSQL»
+* LESSON 2.4 «Database. Mongo. ORM»
+* LESSON 2.5 «Инструменты для оперативной работы с данными»
+* LESSON 2.6 «Инструменты для визуализации и изучения данных»
 * diplom - Дипломная работа
