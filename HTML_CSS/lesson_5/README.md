@@ -5,5 +5,5 @@
 ---------------------------------------------------------------------
 
 * [Форма подписки на новинки и скидки](https://github.com/netology-code/html-2-homeworks/blob/master/forms/news-and-offers-form) --->перейти на решение codepen---> [РЕШЕНИЕ](https://codepen.io/Dimonia/pen/eqPrEO)
-* [Стилизация кнопки]()--->перейти на решение codepen---> [РЕШЕНИЕ]()
-* [Форма обратной связи]() --->перейти на решение codepen---> [РЕШЕНИЕ]()
+* [Стилизация кнопки](https://github.com/netology-code/html-2-homeworks/blob/master/forms/button-effects)--->перейти на решение codepen---> [РЕШЕНИЕ](https://codepen.io/Dimonia/pen/GVYdxQ)
+* [Форма обратной связи](https://github.com/netology-code/html-2-homeworks/blob/master/forms/feedback-form) --->перейти на решение codepen---> [РЕШЕНИЕ](https://codepen.io/Dimonia/pen/gVBzVB)
