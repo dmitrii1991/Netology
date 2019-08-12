@@ -51,8 +51,15 @@ def landing(request):
 
 def stats(request):
     data = Counter(status=True)
-    original = round(data['from-landing-original']/data['original'], 1)
-    test = round(data['from-landing-test'] / data['test'], 1)
+    try:
+        original = round(data['from-landing-original']/data['original'], 1)
+    except ZeroDivisionError:
+        original = 'невозможно посчитать'
+    try:
+        test = round(data['from-landing-test'] / data['test'], 1)
+    except ZeroDivisionError:
+        test = 'невозможно посчитать'
+        
     return render_to_response('stats.html', context={
         'test_conversion': test,
         'original_conversion': original,
