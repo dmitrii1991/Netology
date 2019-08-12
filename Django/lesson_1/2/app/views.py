@@ -3,7 +3,6 @@ import time
 import datetime
 from django.shortcuts import render
 
-
 def file_list(request):
     template_name = 'index.html'
     context = {'files': []}
@@ -23,7 +22,6 @@ def file_list(request):
             file['mtime'] = datetime.datetime.strptime(time.strftime("%d %m %Y %H %M %S", time.localtime(secm)),
                                                        "%d %m %Y %H %M %S")
             context['files'].append(file)
-
     return render(request, template_name, context)
 
 def file_content(request, name):
