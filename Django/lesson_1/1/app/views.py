@@ -59,7 +59,7 @@ def stats(request):
         test = round(data['from-landing-test'] / data['test'], 1)
     except ZeroDivisionError:
         test = 'невозможно посчитать'
-        
+
     return render_to_response('stats.html', context={
         'test_conversion': test,
         'original_conversion': original,
