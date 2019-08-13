@@ -3,7 +3,7 @@ import time
 import datetime
 from django.shortcuts import render
 
-def file_list(request):
+def file_list(request, date=None):
     template_name = 'index.html'
     context = {'files': []}
 
@@ -17,11 +17,17 @@ def file_list(request):
             secc = os.path.getmtime(folderName + '/' + filename)
             secm = os.path.getctime(folderName + '/' + filename)
             file['name'] = filename
-            file['ctime'] = datetime.datetime.strptime(time.strftime("%d %m %Y %H %M %S", time.localtime(secc)),
-                                                       "%d %m %Y %H %M %S")
-            file['mtime'] = datetime.datetime.strptime(time.strftime("%d %m %Y %H %M %S", time.localtime(secm)),
-                                                       "%d %m %Y %H %M %S")
-            context['files'].append(file)
+            file['ctime'] = datetime.datetime.strptime(time.strftime("%d %m %Y", time.localtime(secc)),
+                                                       "%d %m %Y")
+            file['mtime'] = datetime.datetime.strptime(time.strftime("%d %m %Y", time.localtime(secm)),
+                                                       "%d %m %Y")
+            if date:
+                y, m, d = date.split('-')
+                date_file = datetime.datetime(year=int(y), month=int(m), day=int(d))
+                if file['ctime'] == date_file:
+                    context['files'].append(file)
+            else:
+                context['files'].append(file)
     return render(request, template_name, context)
 
 def file_content(request, name):
