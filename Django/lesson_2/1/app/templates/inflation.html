@@ -1,0 +1,62 @@
+<!DOCTYPE html>{% load static %}
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Инфляция в Росси</title>
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  </head>
+
+  <body>
+    {% block content %}
+      <div class="row">
+        <h1 class="col s12">Инфляция в России</h1>
+        <div class="col s12 m8">
+          <table>
+            <tr>
+            {% for key  in keys %}
+              {% if key == 'Суммарная' %}
+                <td style="background: grey;"><b>{{ key }}</b></td>
+              {% else %}
+                <td><b>{{ key }}</b></td>
+              {% endif %}
+            {% endfor %}
+            </tr>
+
+            {% for year, data in total_data.items %}
+            <tr>
+              <td>{{ year }}</td>
+              {% for month, temp in data.items %}
+                {% if month == 'Суммарная' %}
+                  <td style="background: grey;">{{ temp }}</td>
+                {% else %}
+                  {% if temp < 0 %}
+                    <td style="background: green;">{{ temp }}</td>
+                  {% elif temp >= 1 and temp < 2 %}
+                    <td style="background: #cda39c;">{{ temp }}</td>
+                  {% elif temp >= 2 and temp < 5 %}
+                    <td style="background: #cd5c5c;">{{ temp }}</td>
+                  {% elif temp >= 5 %}
+                    <td style="background: #cd040f;">{{ temp }}</td>
+                  {% else %}
+                    <td>{{ temp }}</td>
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+              <td>{{ temp }}</td>
+            </tr>
+            {% endfor %}
+          </table>
+
+
+        </div>
+      </div>
+    {% endblock %}
+
+  </body>
+</html>
