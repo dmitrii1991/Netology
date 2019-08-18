@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Каталог{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="header">
+            <h1>Сравнение телефонов</h1>
+        <table>
+        <tr>
+            <th>Модель</th>
+            {% for phone in phones %}
+            <th>{{ phone.model }}</th>
+            {% endfor %}
+        </tr>
+        <tr>
+            <td>Бренд</td>
+            {% for phone in phones %}
+            <td>{{ phone.brand }}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            <td>Цена</td>
+            {% for phone in phones %}
+            <td>{{ phone.price }}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            <td>Память</td>
+            {% for phone in phones %}
+            <td>{{ phone.memory }}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            <td>Размер экрана</td>
+            {% for phone in phones %}
+            <td>{{ phone.screen_size }}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            <td>ОС</td>
+            {% for phone in phones %}
+            <td>{{ phone.system }}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            <td>Цвет</td>
+            {% for phone in phones %}
+            <td>{{ phone.color }}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            <td>Двойная камера</td>
+            {% for phone in phones %}
+                {% if phone.double_camera %}
+                    <td>Да</td>
+                {% else %}
+                    <td>Нет</td>
+                {% endif %}
+            {% endfor %}
+        </tr>
+        </table>
+        <div>
+        </div>
+    </div>
+
+
+
+        </div>
+    </div>
+{% endblock %}
