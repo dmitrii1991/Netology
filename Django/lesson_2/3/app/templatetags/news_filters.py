@@ -23,7 +23,7 @@ def format_score(value=None):
         return "Плохая репутация"
     elif int(value)in range(-5, 5):
         return "Нейтральная репутация"
-    elif int(value) > 5:
+    elif int(value) >= 5:
         return "Хорошая репутация"
     else:
         return "Неизвестная репутация"
@@ -44,5 +44,11 @@ def format_num_comments(value):
 def format_selfcomments(message, count):
     if message:
         message_words = message.split(' ')
-        return f'{" ".join(message_words[:count])}...{" ".join(message_words[:-1-count:-1])}'
-    return "Нет мообщения"
+        while count > 1:
+            if len(message_words) >= 2 * count:
+                return f'{" ".join(message_words[:count])}...{" ".join(message_words[len(message_words)-count:len(message_words)])}'
+            else:
+                count -= 1
+        return message  # тут сообщение 1-2 слова
+    else:
+        return "Нет cообщения"
