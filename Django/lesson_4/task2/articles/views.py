@@ -5,6 +5,6 @@ from .models import Article
 
 def articles_list(request):
     template_name = 'articles/news.html'
-    articles = Article.objects.all().select_related("author").only('author__name', 'genre', 'title', 'text')
+    articles = Article.objects.defer('published_at').select_related('author', 'genre').defer('author__phone')
     context = {'articles': articles}
     return render(request, template_name, context)
