@@ -1,13 +1,5 @@
 from django.db import models
 
-class Tag(models.Model):
-
-    name = models.CharField(max_length=30, verbose_name='Тег')
-
-    def __str__(self):
-        return self.name
-
-
 
 
 class Article(models.Model):
@@ -25,9 +17,29 @@ class Article(models.Model):
     def __str__(self):
         return self.title
 
+class Tag(models.Model):
+
+    name = models.CharField(max_length=30, verbose_name='Тег')
+
+    class Meta:
+        verbose_name = 'Разделы'
+        verbose_name_plural = 'Разделы'
+
+    def __str__(self):
+        return self.name
+
+
 
 class ArticleTags(models.Model):
 
     tags = models.ForeignKey(Tag, on_delete=models.CASCADE)
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
     isMain = models.BooleanField(default=False, verbose_name='Основной')
+
+    class Meta:
+        verbose_name = 'Тематика статьи'
+        verbose_name_plural = 'Тематика статьи'
+
+
+    def __str__(self):
+        return self.tags
