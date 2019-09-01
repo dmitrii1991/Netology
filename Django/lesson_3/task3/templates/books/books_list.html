@@ -13,9 +13,13 @@
             <div class="book col-md-4">
                 <h2>{{ book.name }}</h2>
                 <p>Автор: {{ book.author }}</p>
-                <p>Дата публикации: {{ book.pub_date }}</p>
-            </div>
+                <p>Дата публикации: {{ book.pub_date|date:"d-m-Y" }}</p>
+                <a class="button button-primary" href='/books/{{ book.pub_date|date:"Y-m-d"}}'>Cсылка на книгу</a>
+            </div>:
         {% endfor %}
         </div>
+        {% if prev_page_url %}<a class="button button-primary" href='/books/{{ prev_page_url.pub_date|date:"Y-m-d" }}'>⟵</a>{% endif %}
+    <a class="button disabled" href="">{{ current_page }}</a>
+    {% if next_page_url %}<a class="button button-primary" href='/books/{{ .pub_date|date:"Y-m-d" }}'>⟶</a>{% endif %}
     </div>
 {% endblock %}
