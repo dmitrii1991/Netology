@@ -25,6 +25,8 @@ def product_view(request, pk):
         request.session['reviewed_products'] = list()
     form = ReviewForm
     if request.method == 'POST':
+        request.session['reviewed_products'].append(product)
+        request.session.save()
         review_ans = request.POST['text'] # чтение
         review = Review(text=review_ans, product=product)  # запись
         review.save()
@@ -43,4 +45,3 @@ def product_view(request, pk):
         }
 
     return render(request, template, context)
-xt)
