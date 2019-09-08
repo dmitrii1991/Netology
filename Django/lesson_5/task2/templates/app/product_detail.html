@@ -10,11 +10,12 @@
             <li><p>{{review.text}}</p></li>
         {% endfor %}
     </ul>
+
     {% if is_review_exist %}
         <p>Отзыв от вас уже есть</p>
     {% else %}
         <p>Можете добавить отзыв</p>
-    {% endif %}
+
 
     <form action="{% url 'product_detail' product.id %}" method="POST">
         {% csrf_token %}
@@ -22,5 +23,6 @@
         <br>
         <input type="submit" value="Отправить отзыв"/>
     </form>
+    {% endif %}
 </div>
 {% endblock %}
