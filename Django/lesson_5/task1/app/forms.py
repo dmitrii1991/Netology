@@ -2,7 +2,7 @@ from django import forms
 
 class CalcForm(forms.Form):
     initial_fee = forms.IntegerField(label="Стоимость товара")
-    rate = forms.CharField(label="Процентная ставка")
+    rate = forms.FloatField(label="Процентная ставка")
     months_count = forms.IntegerField(label="Срок кредита в месяцах")
 
     def clean_initial_fee(self):
