@@ -16,9 +16,10 @@ class Car(models.Model):
         verbose_name_plural = 'Автомобили'
 
     def total_reviews(self):
+        self.short_description = "Всего отзывов"
         return self.review_count()
 
-    total_reviews.short_description = "Всего отзывов"
+    
 
 
 
