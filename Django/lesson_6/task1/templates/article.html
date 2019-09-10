@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Заголовок статьи{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="header">
+
+            <h3>{{ article.headline}}</h3>
+
+            {% if user_pay and article.paid or not article.paid %}
+                <div img src="{{IMAGES}}{{article.image}}"/></div>
+                <p>  {{ article.image })  </p>
+                <p>  {{ article.content}}  </p>
+            {% else %}
+                <p> Недоступно!!! </p>
+            </div>
+            {% endif %}
+
+
+        </div>
+    </div>
+{% endblock %}
