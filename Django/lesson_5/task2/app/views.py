@@ -21,27 +21,27 @@ def product_view(request, pk):
     template = 'app/product_detail.html'
     product = get_object_or_404(Product, id=pk)
     reviews = Review.objects.all().filter(product=product)
-    if 'reviewed_products' not in request.session:
-        request.session['reviewed_products'] = list()
     form = ReviewForm
-    if request.method == 'POST':
-        request.session['reviewed_products'].append(product)
-        request.session.save()
-        review_ans = request.POST['text'] # чтение
-        review = Review(text=review_ans, product=product)  # запись
-        review.save()
-
+    exist = None
+    request.session.setdefault('reviewed_product', [])
+    reviewed_product = request.session['reviewed_product']
+    if pk not in reviewed_product:
+        if request.method == 'POST':
+            form = form(request.POST)
+            form.is_valid()
+            form_review_text = form.cleaned_data['text']
+            form_review = Review(text=form_review_text, product=product)
+            form_review.save()
+            reviewed_product.append(pk)
+            request.session['reviewed_product'] = reviewed_product
+            exist = True
+    else:
+        exist = True
     context = {
         'form': form,
         'product': product,
-        'is_review_exist': True,
+        'reviews': reviews,
+        'is_review_exist': exist
     }
-
-    if product in request.session['reviewed_products']:# проверка
-        context = {
-            'form': form,
-            'product': product,
-            'reviews': reviews,
-        }
-
     return render(request, template, context)
+
