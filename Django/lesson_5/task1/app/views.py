@@ -8,7 +8,7 @@ def calc_view(request):
     if request.method == "GET":
         form = CalcForm(request.GET)
         if form.is_valid():
-            initial_fee = int(form.cleaned_data['initial_fee'])
+            initial_fee = float(form.cleaned_data['initial_fee'])
             rate = int(form.cleaned_data['rate'])
             months_count = int(form.cleaned_data['months_count'])
             common_result = initial_fee + initial_fee * rate / 100
