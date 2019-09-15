@@ -1,0 +1,19 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Угадай число{% endblock %}
+
+{% block content %}
+    <div>
+        <div>
+            <h1>Игра "Угадай число"</h1>
+             <form method='post'>
+                {% csrf_token %}
+                {{ form.as_p }}
+                {{ text }}
+            <button>ИГРАТЬ</button>
+        </form>
+        </div>
+    </div>
+{% endblock %}
