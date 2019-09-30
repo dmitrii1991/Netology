@@ -1,0 +1,92 @@
+{% extends "basa/basic.html" %}
+
+{% block content %}
+
+  <div class="container mt-3">
+    <!-- Example row of columns -->
+    <div class="row">
+      <div class="col-md-12">
+        <h2>{{ phone.title }}</h2>
+
+        <img src="{{ MEDIA_URL }}{{ phone.images.url }}" width='120' alt="{{ phone.pk }}"/>
+
+        <p>{{ phone.description }}</p>
+        <form method="post" action="./cart/">
+          <input type="hidden" name="csrfmiddlewaretoken"
+                 value="N4vcBqzjoYkU7OTDuAT8hq8srpvYX44nJsswuP7e3EYg0Hq8DgxuR0eiXWbSr5RZ">
+          <input type="hidden" name="merchandise_id" value="1">
+          <input type="submit" class="btn btn-secondary" value="Добавить в корзину »">
+        </form>
+      </div>
+    </div>
+    <hr>
+
+    ★★★★★ <span>Вася</span>
+    <p> Хороший отзыв</p>
+
+    ★★ <span>Петя</span>
+    <p> Плохой отзыв</p>
+
+    <hr>
+
+    <div class="row">
+      <div class="col-lg-6 col-md-8 col-sm-12">
+        <h4>Оставте отзыв:</h4>
+
+        <form action="./merch/1/feedback" method="post">
+          <input type="hidden" name="csrfmiddlewaretoken"
+                 value="N4vcBqzjoYkU7OTDuAT8hq8srpvYX44nJsswuP7e3EYg0Hq8DgxuR0eiXWbSr5RZ">
+          <div class="form-group">
+            <label for="name">Имя</label>
+            <input type="text" class="form-control" id="name" aria-describedby="nameHelp"
+                   placeholder="Представтесь" name="name" data-cip-id="name">
+          </div>
+          <div class="form-group">
+            <label for="content">Содержание</label>
+            <textarea class="form-control" id="content" placeholder="Содержание"
+                      name="description"></textarea>
+          </div>
+
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="mark" id="mark1" value="1">
+            <label class="form-check-label" for="mark1">
+              1
+            </label>
+          </div>
+
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="mark" id="mark2" value="2">
+            <label class="form-check-label" for="mark2">
+              2
+            </label>
+          </div>
+
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="mark" id="mark3" value="3">
+            <label class="form-check-label" for="mark3">
+              3
+            </label>
+          </div>
+
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="mark" id="mark4" value="4">
+            <label class="form-check-label" for="mark4">
+              4
+            </label>
+          </div>
+
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="mark" id="mark5" value="5">
+            <label class="form-check-label" for="mark5">
+              5
+            </label>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Оставить</button>
+        </form>
+      </div>
+    </div>
+
+  </div> <!-- /container -->
+
+{% endblock %}

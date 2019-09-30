@@ -1,0 +1,25 @@
+{% extends "basa/basic.html" %}
+
+{% block content %}
+
+  <div class="container">
+    <h1>Смартфоны</h1>
+    <div class="row">
+    {% for phone in phones %}
+      <div class="col-md-4">
+        <h2>{{ phone.title }}</h2>
+        <p>{{ phone.description }}</p>
+        <a href= "/prosto/smartphones/{{ phone.pk }}/">
+          <img src="{{ MEDIA_URL }}{{ phone.images.url }}" width='100' alt="{{ phone.pk }}"/>
+        </a>
+
+        <form>
+          <input type="submit" class="btn btn-secondary" value="Добавить в корзину »">
+        </form>
+      </div>
+    {% endfor %}
+
+    </div>
+  </div>
+
+{% endblock %}

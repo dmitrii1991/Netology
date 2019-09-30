@@ -1,0 +1,62 @@
+{% extends "basa/basic.html" %}
+
+{% block content %}
+
+  <div class="jumbotron">
+    <div class="container">
+      <h1 class="display-4">Добро пожаловать на сайт просто магазина</h1>
+      <p>Лучшие мобилы только у нас:</p>
+    </div>
+  </div>
+
+  <div class="container mb-5">
+    <!-- Example row of columns -->
+    <div class="row">
+
+      {% for phone in phones %}
+      <div class="col-md-4">
+        <h2>{{ phone.title }}</h2>
+        <p>{{ phone.description }}</p>
+        <a href= "/prosto/smartphones/{{ phone.pk }}/">
+          <img src="{{ MEDIA_URL }}{{ phone.images.url }}" width='180' alt="{{ phone.pk }}"/>
+        </a>
+
+        <form>
+          <input type="submit" class="btn btn-secondary" value="Добавить в корзину »">
+        </form>
+      </div>
+    {% endfor %}
+
+    </div>
+  </div>
+
+  <div class="jumbotron">
+    <div class="container">
+      <h1 class="display-4">Не знаете что одеть летом?</h1>
+      <p>Вот что мы можем предложить:</p>
+    </div>
+  </div>
+
+
+  <div class="container mb-5">
+    <!-- Example row of columns -->
+    <div class="row">
+
+      <div class="col-md-4">
+        <h2>Фуфайка</h2>
+
+        <a href="./phone.html">
+
+          <img src="./static/fufajka.jpg" width="180">
+
+        </a>
+
+        <form>
+          <input type="submit" class="btn btn-secondary" value="Добавить в корзину »">
+        </form>
+      </div>
+
+    </div>
+  </div> <!-- /container -->
+
+{% endblock %}
