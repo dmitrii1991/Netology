@@ -32,9 +32,9 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'django.contrib.admin',
-    'django.contrib.auth',
+    'django.contrib.auth',  # Связ. с авторизацимей
     'django.contrib.contenttypes',
-    'django.contrib.sessions',
+    'django.contrib.sessions',  # Связ. с авторизацимей
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'work',
@@ -42,10 +42,10 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',  # Связ. с авторизацимей
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',  # Связ. с авторизацимей
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -125,3 +125,7 @@ STATICFILES_DIRS = [
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'work/media/')
 MEDIA_URL = '/'
+
+LOGIN_URL = 'login/'# интернет адрес по которому будет перенаправлен не авторизованный пользователь
+LOGIN_REDIRECT_URL = "http://127.0.0.1:8000/prosto/" # интернет адрес по которому будет перенаправлен П в случае успеха
+LOGOUT_REDICTERED_URL = 'login/' # интернет адрес по которому будет перенаправлен П в случае выхода с сайта
