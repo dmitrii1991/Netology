@@ -37,12 +37,13 @@
                 </li>
             </ul>
             <a class="btn btn-outline-success my-2 my-sm-0" role="button" href="./cart.html">Корзина</a>
-
+<!--                Модуль управеления авторизацией-->
                 {% if user.is_authenticated %}
                         <p class="btn btn-outline-success my-2 my-sm-0">Привет, {{user.username}}</p>
-                        <p class="btn btn-outline-success my-2 my-sm-0">выйти</p>
+                        <a class="btn btn-outline-success my-2 my-sm-0" role="button" href="{% url 'logout_view' %}">выйти</a>
                 {% else %}
-                       <a class="btn btn-outline-success my-2 my-sm-0" role="button" href="{% url 'auth_login' %}">Войти</a>
+                        <a class="btn btn-outline-success my-2 my-sm-0" role="button" href="{% url 'auth_login' %}">Войти</a>
+                        <a class="btn btn-outline-success my-2 my-sm-0" role="button" href="{% url 'signup' %}">Зарегистрироваться</a>
                 {% endif%}
         </div>
     </nav>
