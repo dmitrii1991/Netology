@@ -9,7 +9,7 @@
       <div class="col-md-4">
         <h2>{{ phone.title }}</h2>
         <p>{{ phone.description }}</p>
-        <a href= "/prosto/smartphones/{{ phone.pk }}/">
+        <a href= "{% url 'phone' phone.pk %}">
           <img src="{{ MEDIA_URL }}{{ phone.images.url }}" width='100' alt="{{ phone.pk }}"/>
         </a>
 
