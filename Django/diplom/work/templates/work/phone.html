@@ -20,12 +20,12 @@
       </div>
     </div>
     <hr>
-
-    ★★★★★ <span>Вася</span>
-    <p> Хороший отзыв</p>
-
-    ★★ <span>Петя</span>
-    <p> Плохой отзыв</p>
+<!--загрузка фильтра для отображения звезд-->
+    {% load shop_filters %}
+    {% for review in reviews %}
+      <span> {{ review.score|format_review }}{{ review.author }}</span>
+      <p> {{ review.text }} </p>
+    {% endfor %}
 
     <hr>
 

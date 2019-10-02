@@ -6,7 +6,7 @@ from django.contrib.auth.models import User  # доступ к пользова�
 from django.core.exceptions import ObjectDoesNotExist  # подключение ошибок
 from django.contrib.auth import authenticate, login  # доступ к регистрации
 
-from .models import Bd
+from .models import Bd, Review
 
 import random
 
@@ -21,13 +21,15 @@ def smartphones(request):
 def phone(request, bd_id):
     template = 'work/phone.html'
     phone = Bd.objects.get(pk=bd_id)
-    context = {'phone': phone}
+    reviews = Review.objects.filter(bd=bd_id)
+    context = {'phone': phone, 'reviews': reviews}
+    # context = {'phone': phone}
+    # return HttpResponse(reviews)
     return render(request, template, context)
-
 
 def accessories(request):
     template = 'work/empty_section.html'
-    context= {}
+    context = {}
     return render(request, template, context)
 
 

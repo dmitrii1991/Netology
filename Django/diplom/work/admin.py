@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Bd
+from .models import Bd, Review, Category
 
 class BdAdmin(admin.ModelAdmin):
     list_display = ('title', 'price', 'manufacturer', 'launch', 'description', 'images')
@@ -9,3 +9,5 @@ class BdAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Bd, BdAdmin)
+admin.site.register(Review)
+admin.site.register(Category)
