@@ -6,15 +6,32 @@ from django.contrib.auth.models import User  # доступ к пользова�
 from django.core.exceptions import ObjectDoesNotExist  # подключение ошибок
 from django.contrib.auth import authenticate, login  # доступ к регистрации
 
-from .models import Bd, Review
+from .models import Bd, Review, Cart, Category
 
 import random
 
 
 def smartphones(request):
     template = 'work/smartphones.html'
-    phones = Bd.objects.all()
+    сategory = Category.objects.get(name='Смартфон')
+    phones = Bd.objects.filter(сategory=сategory)
     context = {'phones': phones}
+    if request.method == 'POST':
+        if request.user.is_authenticated:  # связь с данными о пользователе
+            pk_bd = request.POST['add_item']
+            bd = Bd.objects.get(pk=pk_bd)
+            user = User.objects.get(username=request.user.username)  # поиск пользователя
+            cart = Cart.objects.filter(item=pk_bd).filter(user=user)  # Поиск необходимой корзины
+            if cart:
+                cart[0].total_number = cart[0].total_number + 1  # изменение записи
+                cart[0].save()  # сохранение
+                return redirect(reverse("cart"))
+            else:
+                # если корзина с этим товаром не обнаруженаЮ то добавляется товар - 1 шт
+                new = Cart.objects.create(user=user, total_number=1)
+                new.item.add(bd)
+                return redirect(reverse("cart"))
+        return redirect(reverse("auth_login"))  # возврат на авторизацию если пользователь не авторизован
     return render(request, template, context)
 
 
@@ -23,9 +40,35 @@ def phone(request, bd_id):
     phone = Bd.objects.get(pk=bd_id)
     reviews = Review.objects.filter(bd=bd_id)
     context = {'phone': phone, 'reviews': reviews}
-    # context = {'phone': phone}
-    # return HttpResponse(reviews)
+    if request.method == 'POST':
+
+        if 'Cart' in request.POST:  # Отправка в корзину
+            if request.user.is_authenticated:  # связь с данными о пользователе
+                # pk_bd = request.POST['add_item']
+                bd = Bd.objects.get(pk=bd_id)
+                user = User.objects.get(username=request.user.username)  # поиск пользователя
+                cart = Cart.objects.filter(item=bd_id).filter(user=user)  # Поиск необходимой корзины
+                if cart:
+                    cart[0].total_number = cart[0].total_number + 1  # изменение записи
+                    cart[0].save()  # сохранение
+                    return redirect(reverse("cart"))
+                else:
+                    # если корзина с этим товаром не обнаруженаЮ то добавляется товар - 1 шт
+                    new = Cart.objects.create(user=user, total_number=1)
+                    new.item.add(bd)
+                    return redirect(reverse("cart"))
+            return redirect(reverse("auth_login"))  # возврат на авторизацию если пользователь не авторизован
+        elif 'Rewiev' in request.POST:  # Отправка отзыва
+            if request.user.is_authenticated:
+                user = User.objects.get(username=request.user.username)
+                description = request.POST.get('description')
+                mark = request.POST.get('mark')
+                if not Review.objects.filter(author=user).filter(text=description):  # грубая проверка на одни теже данные
+                    new_review = Review.objects.create(author=user, text=description, score=mark, bd=phone)
+            else:
+                return redirect(reverse("auth_login"))
     return render(request, template, context)
+
 
 def accessories(request):
     template = 'work/empty_section.html'
@@ -33,13 +76,57 @@ def accessories(request):
     return render(request, template, context)
 
 
-def index(request):
+def show_cart(request):
+    template = 'work/cart.html'
+    context = {}
+    if request.user.is_authenticated:
+        user = User.objects.get(username=request.user.username)
+        all_cart = Cart.objects.filter(user=user)
+
+        if request.method == 'POST':
+            for _ in all_cart:
+                _.delete()
+                all_cart = set()
+        quantity = len(all_cart)  # количество видов товара в корзине
+        if quantity:
+            context = {'carts': all_cart, 'quantity': quantity}
+        return render(request, template, context)
+    return redirect(reverse("auth_login"))  # возврат на авторизацию если пользователь не авторизован
+
+
+class AddInCart(TemplateView):
+    template_cart = "work/cart.html"
     template = 'work/index.html'
-    phones = Bd.objects.all()
-    # реализована выборка случайных 3 телефонов
-    choices = random.sample(list(phones), 3)
-    context = {'phones': choices}
-    return render(request, template, context)
+
+    def dispatch(self, request, *args, **kwargs):
+        # реализована выборка случайных 3 телефонов
+        сategory = Category.objects.get(name='Смартфон')
+        phones = Bd.objects.filter(сategory=сategory)
+        choices = random.sample(list(phones), 3)
+
+        # реализована выборка случайного товара из категории одеждлы
+        сategory = Category.objects.get(name='Одежда')
+        clothes = Bd.objects.filter(сategory=сategory)
+        choices_cloth = random.choice(list(clothes))
+
+        context = {'phones': choices, "clothes": choices_cloth}
+        if request.method == 'POST':
+            if request.user.is_authenticated:  # связь с данными о пользователе
+                pk_bd = request.POST['add_item']
+                bd = Bd.objects.get(pk=pk_bd)
+                user = User.objects.get(username=request.user.username)  # поиск пользователя
+                cart = Cart.objects.filter(item=pk_bd).filter(user=user)  # Поиск необходимой корзины
+                if cart:
+                    cart[0].total_number = cart[0].total_number + 1  # изменение записи
+                    cart[0].save()                                # сохранение
+                    return redirect(reverse("cart"))
+                else:
+                    # если корзина с этим товаром не обнаруженаЮ то добавляется товар - 1 шт
+                    new = Cart.objects.create(user=user, total_number=1)
+                    new.item.add(bd)
+                    return redirect(reverse("cart"))
+            return redirect(reverse("auth_login"))  # возврат на авторизацию если пользователь не авторизован
+        return render(request, self.template, context)
 
 
 class LoginView(TemplateView):

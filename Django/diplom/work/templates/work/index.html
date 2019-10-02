@@ -21,8 +21,10 @@
           <img src="{{ MEDIA_URL }}{{ phone.images.url }}" width='180' alt="{{ phone.pk }}"/>
         </a>
 
-        <form>
-          <input type="submit" class="btn btn-secondary" value="Добавить в корзину »">
+        <form method="POST">
+          {% csrf_token %}
+          <input type="hidden" name="add_item" value="{{ phone.pk }}"  required="">
+          <input type="submit" class="btn btn-secondary" value="Добавить в корзину » ">
         </form>
       </div>
     {% endfor %}
@@ -43,16 +45,18 @@
     <div class="row">
 
       <div class="col-md-4">
-        <h2>Фуфайка</h2>
+        <h2>{{ clothes.title }}</h2>
 
-        <a href="./phone.html">
+        <a href="{% url 'phone' clothes.pk %}">
 
-          <img src="./static/fufajka.jpg" width="180">
+          <img src="{{ MEDIA_URL }}{{ clothes.images.url }}" width="180">
 
         </a>
 
-        <form>
-          <input type="submit" class="btn btn-secondary" value="Добавить в корзину »">
+        <form method="POST">
+          {% csrf_token %}
+          <input type="hidden" name="add_item" value="{{ clothes.pk }}"  required="">
+          <input type="submit" class="btn btn-secondary" value="Добавить в корзину » ">
         </form>
       </div>
 

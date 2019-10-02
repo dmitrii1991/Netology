@@ -13,7 +13,9 @@
           <img src="{{ MEDIA_URL }}{{ phone.images.url }}" width='100' alt="{{ phone.pk }}"/>
         </a>
 
-        <form>
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="add_item" value="{{ phone.pk }}"  required="">
           <input type="submit" class="btn btn-secondary" value="Добавить в корзину »">
         </form>
       </div>

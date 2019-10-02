@@ -11,36 +11,40 @@
         <img src="{{ MEDIA_URL }}{{ phone.images.url }}" width='120' alt="{{ phone.pk }}"/>
 
         <p>{{ phone.description }}</p>
-        <form method="post" action="./cart/">
-          <input type="hidden" name="csrfmiddlewaretoken"
-                 value="N4vcBqzjoYkU7OTDuAT8hq8srpvYX44nJsswuP7e3EYg0Hq8DgxuR0eiXWbSr5RZ">
-          <input type="hidden" name="merchandise_id" value="1">
-          <input type="submit" class="btn btn-secondary" value="Добавить в корзину »">
+        <form method="post">
+          {% csrf_token %}
+<!--          <input type="hidden" name="add_item" value="{{ phone.pk }}"  required="">-->
+          <input type="submit" class="btn btn-secondary"  value="Добавить в корзину »" name="Cart">
         </form>
       </div>
     </div>
     <hr>
-<!--загрузка фильтра для отображения звезд-->
+<!--загрузка фильтра для отображения звезд и сам фильтр-->
     {% load shop_filters %}
     {% for review in reviews %}
       <span> {{ review.score|format_review }}{{ review.author }}</span>
       <p> {{ review.text }} </p>
     {% endfor %}
-
+<!--конец блока с фильтром-->
     <hr>
 
     <div class="row">
       <div class="col-lg-6 col-md-8 col-sm-12">
         <h4>Оставте отзыв:</h4>
 
-        <form action="./merch/1/feedback" method="post">
-          <input type="hidden" name="csrfmiddlewaretoken"
-                 value="N4vcBqzjoYkU7OTDuAT8hq8srpvYX44nJsswuP7e3EYg0Hq8DgxuR0eiXWbSr5RZ">
+        <form method="post">
+          {% csrf_token %}
           <div class="form-group">
             <label for="name">Имя</label>
+            {% if user.is_authenticated %}
             <input type="text" class="form-control" id="name" aria-describedby="nameHelp"
-                   placeholder="Представтесь" name="name" data-cip-id="name">
+                   value="{{ user.username }}" name="name" data-cip-id="name"  disabled='true'>
+            {% else %}
+            <input type="text" class="form-control" id="name" aria-describedby="nameHelp"
+                   placeholder="Представтесь" name="name" data-cip-id="name" required>
+            {% endif %}
           </div>
+
           <div class="form-group">
             <label for="content">Содержание</label>
             <textarea class="form-control" id="content" placeholder="Содержание"
@@ -48,7 +52,7 @@
           </div>
 
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="mark" id="mark1" value="1">
+            <input class="form-check-input" type="radio" name="mark" id="mark1" value="1" required>
             <label class="form-check-label" for="mark1">
               1
             </label>
@@ -82,7 +86,7 @@
             </label>
           </div>
 
-          <button type="submit" class="btn btn-primary">Оставить</button>
+          <button type="submit" class="btn btn-primary" name="Rewiev" >Оставить</button>
         </form>
       </div>
     </div>

@@ -1,10 +1,11 @@
 from django.urls import path
-from .views import smartphones, phone, accessories, index, RegisterView, LoginView
+from .views import smartphones, phone, accessories, AddInCart, RegisterView, LoginView, show_cart
 from django.contrib.auth.views import LogoutView  # выход
 
 
 urlpatterns = [
-    path('', index, name='index'),
+    path('', AddInCart.as_view(), name='index'),
+    path('cart/', show_cart, name='cart'),
     path('smartphones/', smartphones, name='smartphones'),
     path('smartphones/<int:bd_id>/', phone, name='phone'),
     path('smartphones/accessories/', accessories, name='accessories'),
