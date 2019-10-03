@@ -12,30 +12,34 @@
 <body class="" data-gr-c-s-loaded="true">
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
         <a class="navbar-brand" href="{% url 'index' %}">Просто магазин</a>
-        <img src="{% static '/logo.svg' %}" alt="" width="42" height="42">
+        <img src="{% static 'logo.svg' %}" alt="" width="42" height="42">
 
         <button class="navbar-toggler" type="button" data-toggle="collapse"
             data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault"
             aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+
+            {% with url_name=request.resolver_match.url_name %}
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'index' %}">Главная</a>
-                </li>
-                <li class="nav-item active dropdown">
-                    <a class="nav-link dropdown-toggle" href="{% url 'smartphones' %}" id="dropdown01"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Гаджеты</a>
-                    <div class="dropdown-menu" aria-labelledby="dropdown01">
-                        <a class="dropdown-item" href="{% url 'smartphones' %}">Сматрфоны</a>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'accessories' %}">Аксесcуары</a>
-                </li>
+                    <li class="nav-item {% if url_name == 'index' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'index' %}">Главная</a>
+                    </li>
+
+                    <li class="nav-item  dropdown {% if url_name == 'smartphones' or url_name == 'smartphones' %}active{% endif %}">
+                        <a class="nav-link dropdown-toggle" href="{% url 'smartphones' %}" id="dropdown01"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Гаджеты</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdown01">
+                            <a class="dropdown-item" href="{% url 'smartphones' %}">Сматрфоны</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item {% if url_name == 'accessories' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'accessories' %}">Аксесcуары</a>
+                    </li>
             </ul>
+            {% endwith %}
             <a class="btn btn-outline-success my-2 my-sm-0" role="button" href="{% url 'cart' %}">Корзина</a>
 <!--                Модуль управеления авторизацией-->
                 {% if user.is_authenticated %}
@@ -56,10 +60,11 @@
     <footer class="container">
         <p>© Просто магазин 2018</p>
     </footer>
+{% load staticfiles %}
 
     <script src="{% static 'jquery-3.3.1.slim.min.js' %}"></script>
     <script src="{% static 'popper.min.js' %}"></script>
-    <script src="{% static 'popper.min.js' %}"></script>
+
 
 </body>
 </html>

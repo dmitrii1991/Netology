@@ -27,11 +27,12 @@
     {% endfor %}
 <!--конец блока с фильтром-->
     <hr>
-
+    {% if user_review %}
+    <h4> Вы добавили уже отзыв! </h4>
+    {% else %}
     <div class="row">
       <div class="col-lg-6 col-md-8 col-sm-12">
         <h4>Оставте отзыв:</h4>
-
         <form method="post">
           {% csrf_token %}
           <div class="form-group">
@@ -92,5 +93,5 @@
     </div>
 
   </div> <!-- /container -->
-
+{% endif %}
 {% endblock %}

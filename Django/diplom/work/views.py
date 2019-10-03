@@ -6,9 +6,10 @@ from django.contrib.auth.models import User  # доступ к пользова�
 from django.core.exceptions import ObjectDoesNotExist  # подключение ошибок
 from django.contrib.auth import authenticate, login  # доступ к регистрации
 
-from .models import Bd, Review, Cart, Category
+from .models import Bd, Review, CartItem, Category, Order
 
 import random
+import datetime
 
 
 def smartphones(request):
@@ -21,15 +22,14 @@ def smartphones(request):
             pk_bd = request.POST['add_item']
             bd = Bd.objects.get(pk=pk_bd)
             user = User.objects.get(username=request.user.username)  # поиск пользователя
-            cart = Cart.objects.filter(item=pk_bd).filter(user=user)  # Поиск необходимой корзины
+            cart = CartItem.objects.filter(item=pk_bd).filter(user=user).filter(bought=False)  # Поиск необходимой корзины
             if cart:
                 cart[0].total_number = cart[0].total_number + 1  # изменение записи
                 cart[0].save()  # сохранение
                 return redirect(reverse("cart"))
             else:
                 # если корзина с этим товаром не обнаруженаЮ то добавляется товар - 1 шт
-                new = Cart.objects.create(user=user, total_number=1)
-                new.item.add(bd)
+                new = CartItem.objects.create(user=user, total_number=1, item=bd)
                 return redirect(reverse("cart"))
         return redirect(reverse("auth_login"))  # возврат на авторизацию если пользователь не авторизован
     return render(request, template, context)
@@ -39,23 +39,23 @@ def phone(request, bd_id):
     template = 'work/phone.html'
     phone = Bd.objects.get(pk=bd_id)
     reviews = Review.objects.filter(bd=bd_id)
-    context = {'phone': phone, 'reviews': reviews}
+    if request.user.is_authenticated:
+        user = User.objects.get(username=request.user.username)
+        user_review = Review.objects.filter(author=user).filter(bd=bd_id)
+    context = {'phone': phone, 'reviews': reviews, 'user_review': user_review}
     if request.method == 'POST':
-
         if 'Cart' in request.POST:  # Отправка в корзину
             if request.user.is_authenticated:  # связь с данными о пользователе
-                # pk_bd = request.POST['add_item']
                 bd = Bd.objects.get(pk=bd_id)
                 user = User.objects.get(username=request.user.username)  # поиск пользователя
-                cart = Cart.objects.filter(item=bd_id).filter(user=user)  # Поиск необходимой корзины
+                cart = CartItem.objects.filter(item=bd_id).filter(user=user).filter(bought=False)  # Поиск необходимой корзины
                 if cart:
                     cart[0].total_number = cart[0].total_number + 1  # изменение записи
                     cart[0].save()  # сохранение
                     return redirect(reverse("cart"))
                 else:
-                    # если корзина с этим товаром не обнаруженаЮ то добавляется товар - 1 шт
-                    new = Cart.objects.create(user=user, total_number=1)
-                    new.item.add(bd)
+                    # если корзина с этим товаром не обнаружена, то добавляется товар - 1 шт
+                    new = CartItem.objects.create(user=user, total_number=1, item=bd)
                     return redirect(reverse("cart"))
             return redirect(reverse("auth_login"))  # возврат на авторизацию если пользователь не авторизован
         elif 'Rewiev' in request.POST:  # Отправка отзыва
@@ -81,12 +81,40 @@ def show_cart(request):
     context = {}
     if request.user.is_authenticated:
         user = User.objects.get(username=request.user.username)
-        all_cart = Cart.objects.filter(user=user)
-
+        all_cart = CartItem.objects.filter(user=user).filter(bought=False)
         if request.method == 'POST':
-            for _ in all_cart:
-                _.delete()
+            if 'order' in request.POST:
+                invoice = random.randint(1, 999999999)  # тут можно реализовать методику созд. уникального номера для накладной
+                date = datetime.datetime.now()
+                order = Order.objects.create(user=user, invoice=invoice, date=date)
+                order.cart.add(*all_cart)
+                total_number = 0
+                for cart in all_cart:
+                    total_number = total_number + cart.total_number * cart.item.price
+                    cart.bought = True  # Помечаем, что товар заказан, и убираем его из корзины (в буд. можно показвать как историю)
+                    cart.save()
+                    print(total_number)
+                order.total_number = total_number
+                order.save()
                 all_cart = set()
+
+            elif 'clear' in request.POST:
+                pk_cart = request.POST['item']
+                CartItem.objects.get(pk=pk_cart).delete()
+            elif 'add' in request.POST:
+                pk_cart = request.POST['item']
+                cart_item = CartItem.objects.get(pk=pk_cart)
+                cart_item.total_number = cart_item.total_number + 1
+                cart_item.save()
+            else:
+                pk_cart = request.POST['item']
+                cart_item = CartItem.objects.get(pk=pk_cart)
+                if cart_item.total_number == 1:
+                    cart_item.delete()
+                else:
+                    cart_item.total_number = cart_item.total_number - 1
+                    cart_item.save()
+
         quantity = len(all_cart)  # количество видов товара в корзине
         if quantity:
             context = {'carts': all_cart, 'quantity': quantity}
@@ -115,15 +143,14 @@ class AddInCart(TemplateView):
                 pk_bd = request.POST['add_item']
                 bd = Bd.objects.get(pk=pk_bd)
                 user = User.objects.get(username=request.user.username)  # поиск пользователя
-                cart = Cart.objects.filter(item=pk_bd).filter(user=user)  # Поиск необходимой корзины
+                cart = CartItem.objects.filter(item=pk_bd).filter(user=user).filter(bought=False)  # Поиск необходимой корзины
                 if cart:
                     cart[0].total_number = cart[0].total_number + 1  # изменение записи
                     cart[0].save()                                # сохранение
                     return redirect(reverse("cart"))
                 else:
                     # если корзина с этим товаром не обнаруженаЮ то добавляется товар - 1 шт
-                    new = Cart.objects.create(user=user, total_number=1)
-                    new.item.add(bd)
+                    new = CartItem.objects.create(user=user, total_number=1, item=bd)
                     return redirect(reverse("cart"))
             return redirect(reverse("auth_login"))  # возврат на авторизацию если пользователь не авторизован
         return render(request, self.template, context)

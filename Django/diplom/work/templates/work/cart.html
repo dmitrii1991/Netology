@@ -16,19 +16,24 @@
         {% for cart in carts %}
         <li class="list-group-item d-flex justify-content-between lh-condensed">
           <div>
-            {% for c in cart.item.all %}
-            <h6 class="my-0">{{ c.title }}</h6>
-            <small class="text-muted">{{ c.description }}</small>
-            {% endfor %}
+            <h6 class="my-0">{{ cart.item }}</h6>
+            <small class="text-muted">{{ cart.item.description  }} </small>
           </div>
           <span class="text-muted">{{ cart.total_number }}</span>
+          <form  method="post">
+            {% csrf_token %}
+            <input type="hidden" name="item" value="{{ cart.pk }}"  required="">
+            <button type="submit" class="btn btn-secondary" name="clear" >Очистить</button>
+            <button type="submit" class="btn btn-secondary" name="add" >Добавить</button>
+            <button type="submit" class="btn btn-secondary" name="reduce" >Уменьшить</button>
+          </form>
         </li>
         {% endfor %}
       </ul>
 
       <form class="card p-2" method="post">
         {% csrf_token %}
-        <button type="submit" class="btn btn-secondary">Заказать</button>
+        <button type="submit" class="btn btn-secondary" name="order">Заказать</button>
       </form>
       {% else %}
           <span class="text-muted"> Корзина пуста </span>

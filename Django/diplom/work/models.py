@@ -45,14 +45,36 @@ class Category(models.Model):
         ordering = ['name']
 
 
-class Cart(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE ,verbose_name='Владелец корзины')  # каждая козина => на 1 из всех пользователей
-    total_number = models.IntegerField(verbose_name='Количество категорий товара', default=1)
-    item = models.ManyToManyField('Bd', blank=True, verbose_name='Корзина для товаров')  # каждая карзина => каждый товар
+class CartItem(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Покупатель')  # каждый товар из козины имеет своего покупателя из всех пользователей
+    total_number = models.IntegerField(verbose_name='Количество товара', default=1)
+    item = models.ForeignKey('Bd', blank=True, on_delete=models.CASCADE, verbose_name='Корзина для товаров')  # каждый товар из козины ссылается на 1 товар из всех товаров
+    bought = models.BooleanField(default=False, verbose_name='слелан ли заказ (якобы оплачено)')
 
     def __str__(self):
-        return f'Корзина {self.user}'
+        return f'Товар из корзины {self.user} с {self.item} в количестве {self.total_number}'
 
     class Meta:
         verbose_name_plural = 'Корзины'
         verbose_name = 'Корзина'
+
+
+class Order(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Владелец заказа')  # У каждого заказа может быть только 1 заказчик из списка пользователей
+    cart = models.ManyToManyField(CartItem, verbose_name='1 товар корзины')  # У каждого заказа может быть много товаров из корзины (+ указано количество)
+    invoice = models.CharField(max_length=10, unique=True, verbose_name='Номер накладной')
+    done = models.BooleanField(default=False, verbose_name='Выполнен заказ')  # декоративный элемент
+    date = models.DateTimeField(verbose_name='Дата заказа')
+    total_number = models.FloatField(verbose_name='Общая сумма', default=0)
+
+    def __str__(self):
+        return f'Накладная №{self.invoice} '
+
+    def display_item(self):
+        return ', '.join([item.item.title  for item in self.cart.all()])
+    display_item.short_description = 'заказанные товары'
+
+    class Meta:
+        verbose_name_plural = 'Заказы'
+        verbose_name = 'Заказ'
+
