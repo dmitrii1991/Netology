@@ -3,8 +3,8 @@ from .models import Bd, Review, Category, CartItem, Order
 
 
 class BdAdmin(admin.ModelAdmin):
-    list_display = ('title', 'price', 'manufacturer', 'launch', 'description', 'images', 'сategory')
-    list_display_links = ('title', 'manufacturer', 'сategory')
+    list_display = ('title', 'price', 'manufacturer', 'launch', 'description', 'images', 'category')
+    list_display_links = ('title', 'manufacturer', 'category')
     search_fields = ('title', 'manufacturer')
 
 

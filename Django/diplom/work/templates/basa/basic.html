@@ -27,13 +27,18 @@
                         <a class="nav-link" href="{% url 'index' %}">Главная</a>
                     </li>
 
-                    <li class="nav-item  dropdown {% if url_name == 'smartphones' or url_name == 'smartphones' %}active{% endif %}">
-                        <a class="nav-link dropdown-toggle" href="{% url 'smartphones' %}" id="dropdown01"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Гаджеты</a>
-                        <div class="dropdown-menu" aria-labelledby="dropdown01">
-                            <a class="dropdown-item" href="{% url 'smartphones' %}">Сматрфоны</a>
-                        </div>
+                    {% with url_name=request.resolver_match.url_name %}
+                    {% for category in category_list %}
+                        {% if category.name == "Смартфон" %}
+                        <li class="nav-item {% if url_name == 'smartphones' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'smartphones' %}"  aria-haspopup="true" aria-expanded="false">{{ category.name }}</a>
+                        {% else %}
+                        <li class="nav-item {% if url_name == 'clothes' %}active{% endif %}">
+                         <a class="nav-link" href="{% url 'clothes' %}"  aria-haspopup="true" aria-expanded="false">{{ category.name }}</a>
+                        {% endif %}
                     </li>
+                    {% endfor %}
+                    {% endwith %}
 
                     <li class="nav-item {% if url_name == 'accessories' %}active{% endif %}">
                         <a class="nav-link" href="{% url 'accessories' %}">Аксесcуары</a>
@@ -60,7 +65,7 @@
     <footer class="container">
         <p>© Просто магазин 2018</p>
     </footer>
-{% load staticfiles %}
+
 
     <script src="{% static 'jquery-3.3.1.slim.min.js' %}"></script>
     <script src="{% static 'popper.min.js' %}"></script>

@@ -14,9 +14,32 @@ import datetime
 
 def smartphones(request):
     template = 'work/smartphones.html'
-    сategory = Category.objects.get(name='Смартфон')
-    phones = Bd.objects.filter(сategory=сategory)
+    category = Category.objects.get(name='Смартфон')
+    phones = Bd.objects.filter(category=category)
     context = {'phones': phones}
+    if request.method == 'POST':
+        if request.user.is_authenticated:  # связь с данными о пользователе
+            pk_bd = request.POST['add_item']
+            bd = Bd.objects.get(pk=pk_bd)
+            user = User.objects.get(username=request.user.username)  # поиск пользователя
+            cart = CartItem.objects.filter(item=pk_bd).filter(user=user).filter(bought=False)  # Поиск необходимой корзины
+            if cart:
+                cart[0].total_number = cart[0].total_number + 1  # изменение записи
+                cart[0].save()  # сохранение
+                return redirect(reverse("cart"))
+            else:
+                # если корзина с этим товаром не обнаруженаЮ то добавляется товар - 1 шт
+                new = CartItem.objects.create(user=user, total_number=1, item=bd)
+                return redirect(reverse("cart"))
+        return redirect(reverse("auth_login"))  # возврат на авторизацию если пользователь не авторизован
+    return render(request, template, context)
+
+
+def clothes(request):
+    template = 'work/smartphones.html'
+    category = Category.objects.get(name='Одежда')
+    clothes = Bd.objects.filter(category=category)
+    context = {'phones': clothes}
     if request.method == 'POST':
         if request.user.is_authenticated:  # связь с данными о пользователе
             pk_bd = request.POST['add_item']
@@ -39,10 +62,11 @@ def phone(request, bd_id):
     template = 'work/phone.html'
     phone = Bd.objects.get(pk=bd_id)
     reviews = Review.objects.filter(bd=bd_id)
+    context = {'phone': phone, 'reviews': reviews}
     if request.user.is_authenticated:
         user = User.objects.get(username=request.user.username)
         user_review = Review.objects.filter(author=user).filter(bd=bd_id)
-    context = {'phone': phone, 'reviews': reviews, 'user_review': user_review}
+        context['user_review'] = user_review
     if request.method == 'POST':
         if 'Cart' in request.POST:  # Отправка в корзину
             if request.user.is_authenticated:  # связь с данными о пользователе
@@ -128,13 +152,13 @@ class AddInCart(TemplateView):
 
     def dispatch(self, request, *args, **kwargs):
         # реализована выборка случайных 3 телефонов
-        сategory = Category.objects.get(name='Смартфон')
-        phones = Bd.objects.filter(сategory=сategory)
+        category = Category.objects.get(name='Смартфон')
+        phones = Bd.objects.filter(category=category)
         choices = random.sample(list(phones), 3)
 
         # реализована выборка случайного товара из категории одеждлы
-        сategory = Category.objects.get(name='Одежда')
-        clothes = Bd.objects.filter(сategory=сategory)
+        category = Category.objects.get(name='Одежда')
+        clothes = Bd.objects.filter(category=category)
         choices_cloth = random.choice(list(clothes))
 
         context = {'phones': choices, "clothes": choices_cloth}

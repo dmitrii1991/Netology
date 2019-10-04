@@ -9,7 +9,7 @@ class Bd(models.Model):
     launch = models.DateField(null=True, blank=True, verbose_name='Дата начало производства')
     description = models.TextField(null=True, blank=True, db_index=True, verbose_name='Описание')
     images = models.ImageField(null=True, blank=True, upload_to='media/', verbose_name='Изображения')
-    сategory = models.ForeignKey('Category', on_delete=models.CASCADE, blank=True, null=True,  verbose_name='Категория')  # каждый товар => на 1 из всех категорий
+    category = models.ForeignKey('Category', on_delete=models.CASCADE, blank=True, null=True,  verbose_name='Категория')  # каждый товар => на 1 из всех категорий
 
     def __str__(self):
         return self.title
