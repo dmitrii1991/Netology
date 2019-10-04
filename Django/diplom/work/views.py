@@ -16,7 +16,7 @@ def smartphones(request):
     template = 'work/smartphones.html'
     category = Category.objects.get(name='Смартфон')
     phones = Bd.objects.filter(category=category)
-    context = {'phones': phones}
+    context = {'phones': phones, 'category': category}
     if request.method == 'POST':
         if request.user.is_authenticated:  # связь с данными о пользователе
             pk_bd = request.POST['add_item']
@@ -39,7 +39,7 @@ def clothes(request):
     template = 'work/smartphones.html'
     category = Category.objects.get(name='Одежда')
     clothes = Bd.objects.filter(category=category)
-    context = {'phones': clothes}
+    context = {'phones': clothes, 'category': category}
     if request.method == 'POST':
         if request.user.is_authenticated:  # связь с данными о пользователе
             pk_bd = request.POST['add_item']
@@ -94,9 +94,10 @@ def phone(request, bd_id):
     return render(request, template, context)
 
 
-def accessories(request):
+def not_realised(request, nr_id):
+    category = Category.objects.get(pk=nr_id)
+    context = {'category_choice': category}
     template = 'work/empty_section.html'
-    context = {}
     return render(request, template, context)
 
 

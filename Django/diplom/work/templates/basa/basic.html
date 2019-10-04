@@ -32,17 +32,18 @@
                         {% if category.name == "Смартфон" %}
                         <li class="nav-item {% if url_name == 'smartphones' %}active{% endif %}">
                         <a class="nav-link" href="{% url 'smartphones' %}"  aria-haspopup="true" aria-expanded="false">{{ category.name }}</a>
-                        {% else %}
+                        {% elif category.name == "Одежда"  %}
                         <li class="nav-item {% if url_name == 'clothes' %}active{% endif %}">
-                         <a class="nav-link" href="{% url 'clothes' %}"  aria-haspopup="true" aria-expanded="false">{{ category.name }}</a>
+                        <a class="nav-link" href="{% url 'clothes' %}"  aria-haspopup="true" aria-expanded="false">{{ category.name }}</a>
+                        {% else %}
+                        <li class="nav-item {% if category_choice.name == category.name %}active{% endif %}">
+                            <a class="nav-link" color="red" href="{% url 'not_realised' category.pk %}"  aria-haspopup="true" aria-expanded="false">{{ category.name }}</a>
+                        </li>
                         {% endif %}
-                    </li>
+
                     {% endfor %}
                     {% endwith %}
 
-                    <li class="nav-item {% if url_name == 'accessories' %}active{% endif %}">
-                        <a class="nav-link" href="{% url 'accessories' %}">Аксесcуары</a>
-                    </li>
             </ul>
             {% endwith %}
             <a class="btn btn-outline-success my-2 my-sm-0" role="button" href="{% url 'cart' %}">Корзина</a>
