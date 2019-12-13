@@ -1,0 +1,35 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700,900&display=swap&subset=cyrillic" rel="stylesheet">
+    <link rel="shortcut icon" href="{% static '/images/favicon.png' %}" type="image/png">
+    <title>getgoods - {% block title %}{% endblock %}</title>
+  </head>
+  <body>
+
+    <nav>
+      <a class="logo" href="{% url 'index' %}">GetGoods</a>
+      <ul class="top-menu">
+          {% if user.is_authenticated %}
+        <li class="menu-item"><a href="{% url 'login' %}">Каталог</a></li>
+        <li class="menu-item">
+          <a href="{% url 'login' %}">Корзина</a><span class="menu-item_goods-counter">27</span>
+        </li>
+        <li class="menu-item"><a href="{% url 'login' %}">Заказы</a></li>
+        <li class="menu-item"><a href="{% url 'login' %}">Выход</a></li>
+          {% else %}
+        <li class="menu-item"><a href="{% url 'login' %}">Вход</a></li>
+        <li class="menu-item"><a href="{% url 'register' %}">Регистрация</a></li>
+          {% endif %}
+      </ul>
+
+    </nav>
+    {% block main %}{% endblock %}
+
+  </body>
+</html>

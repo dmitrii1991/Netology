@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}восстановление пароля{% endblock %}
+
+{% block main %}
+<main class="main-login">
+  <form class="login-form" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input class="login-form_submit" type="submit" value="Сбросить пароль">
+    <ul class="form-menu">
+      <li class="menu-item"><a href="{% url 'register' %}">Регистрация</a></li>
+      <li class="menu-item"><a href="{% url 'login' %}">Вход</a></li>
+    </ul>
+  </form>
+
+</main>
+{% endblock %}
