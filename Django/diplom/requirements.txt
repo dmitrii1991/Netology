@@ -13,7 +13,7 @@ html2text==2018.1.9
 idna==2.8
 itsdangerous==1.1.0
 jdcal==1.4.1
-Jinja2==2.10.1
+Jinja2==2.11.3
 lxml==4.4.0
 MarkupSafe==1.1.1
 numpy==1.16.4
